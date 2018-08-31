@@ -2,10 +2,16 @@ require("dotenv").config()
 const express = require("express")
 const bodyParser = require("body-parser")
 const massive = require("massive")
+const spc = require("./shelfie_products_controller")
 
 const app = express()
 app.use(bodyParser.json())
 port = process.env.PORT || 3005
+
+app.post("/api/shelfieproduct", spc.create)
+app.get("/api/shelfieproducts", spc.read)
+app.put("/api/shelfieproduct/:id", spc.update)
+app.delete("/api/shelfieproduct/:id", spc.delete)
 
 massive(process.env.CONNECTION_STRING).then(db => {
     app.set("db", db)

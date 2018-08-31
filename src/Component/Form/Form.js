@@ -27,10 +27,19 @@ class Form extends Component {
         })
     }
 
+    addShelfieProduct() {
+        this.props.addShelfieProductFn(this.state.imageURL, this.state.productName, this.state.price)
+        this.setState({
+            imageURL: "",
+            productName: "",
+            price: ""
+        })
+        this.props.componentDidMountFn()
+    }
+
     render() {
-        console.log(this.state)
         return (
-            <div>
+            <div className="form_container">
                 <div>
                     {
                         this.state.imageURL === ""
@@ -67,7 +76,8 @@ class Form extends Component {
                 <div>
                     <button
                     onClick={() => this.cancelInput()}>Cancel</button>
-                    <button>Add to inventory</button>
+                    <button
+                    onClick={() => this.addShelfieProduct()}>Add to inventory</button>
                 </div>
             </div>
         )

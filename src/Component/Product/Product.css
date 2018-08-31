@@ -1,0 +1,6 @@
+.product_container {
+    display: flex;
+    /* background: rgb(211, 71, 53); */
+    width: 50vw;
+    margin-top: 15px;
+}
