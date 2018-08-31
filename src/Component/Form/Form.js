@@ -1,4 +1,6 @@
 import React, {Component} from "react"
+import axios from "axios"
+import {Redirect} from "react-router-dom"
 import "./Form.css"
 
 class Form extends Component {
@@ -8,9 +10,11 @@ class Form extends Component {
         this.state = {
             imageURL: "",
             productName: "",
-            price: ""
+            price: "",
+            redirect: false
         }
         this.updateInput = this.updateInput.bind(this)
+        this.renderRedirect = this.renderRedirect.bind(this)
     }
 
     updateInput(e) {
@@ -27,19 +31,25 @@ class Form extends Component {
         })
     }
 
-    addShelfieProduct() {
-        this.props.addShelfieProductFn(this.state.imageURL, this.state.productName, this.state.price)
-        this.setState({
-            imageURL: "",
-            productName: "",
-            price: ""
+    addShelfieProduct(imageURL, productname, price) {
+        axios.post("/api/shelfieProduct", {imageURL, productname, price})
+        .then(() => {
+            this.setState({
+                redirect: true
+            })
         })
-        this.props.componentDidMountFn()
+    }
+
+    renderRedirect() {
+        if (this.state.redirect) {
+            return <Redirect to="/" />
+        }
     }
 
     render() {
         return (
             <div className="form_container">
+                {this.renderRedirect()}
                 <div>
                     {
                         this.state.imageURL === ""
@@ -77,7 +87,7 @@ class Form extends Component {
                     <button
                     onClick={() => this.cancelInput()}>Cancel</button>
                     <button
-                    onClick={() => this.addShelfieProduct()}>Add to inventory</button>
+                    onClick={() => this.addShelfieProduct(this.state.imageURL, this.state.productName, this.state.price)}>Add to inventory</button>
                 </div>
             </div>
         )

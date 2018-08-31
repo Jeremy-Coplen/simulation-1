@@ -7,27 +7,48 @@ class Dashboard extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {}
+        this.state = {
+            shelfieProducts: []
+        }
 
+        this.addShelfieProduct = this.addShelfieProduct.bind(this)
+        this.componentDidMount = this.componentDidMount.bind(this)
         this.deleteShelfieProduct = this.deleteShelfieProduct.bind(this)
     }
+
+    componentDidMount() {
+        axios.get("/api/shelfieproducts")
+        .then(res => {
+          this.setState({
+            shelfieProducts: res.data
+          })
+        })
+      }
+    
+      addShelfieProduct(imageURL, productname, price) {
+        axios.post("/api/shelfieProduct", {imageURL, productname, price})
+        .then(res => {
+          this.setState({
+            shelfieProducts: res.data
+          })
+        })
+      }
 
     deleteShelfieProduct(id) {
         axios.delete(`/api/shelfieproduct/${id}`)
         .then(() => {
-            this.props.componentDidMountFn()
+            this.componentDidMount()
         })
     }
 
     render() {
-        let product = []
-        if(this.props.shelfieProducts) {
-            product = this.props.shelfieProducts.map(item => {
+            let product = this.state.shelfieProducts.map(item => {
                 return (
                     <Product key={item.id} id={item.id} imageURL={item.imageurl} productName={item.productname} price={item.price} deleteShelfieProductFn={this.deleteShelfieProduct}/>
                 )
             })
-        }
+            
+
         return (
             <div>
                 {product}
