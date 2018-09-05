@@ -11,10 +11,17 @@ class Form extends Component {
             imageURL: "",
             productName: "",
             price: "",
-            redirect: false
+            redirect: false,
+            editing: false
         }
         this.updateInput = this.updateInput.bind(this)
         this.renderRedirect = this.renderRedirect.bind(this)
+    }
+
+    componentDidMount() {
+        if(this.props.match.params.id) {
+            axios.get(`/api/shelfieproduct/${this.props.match.params.id}`)
+        }
     }
 
     updateInput(e) {
