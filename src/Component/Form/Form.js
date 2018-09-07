@@ -1,3 +1,5 @@
+// edit functionality untested
+
 import React, {Component} from "react"
 import axios from "axios"
 import {Redirect} from "react-router-dom"
@@ -9,7 +11,7 @@ class Form extends Component {
 
         this.state = {
             imageURL: "",
-            productName: "",
+            productname: "",
             price: "",
             redirect: false,
             editing: false
@@ -21,6 +23,14 @@ class Form extends Component {
     componentDidMount() {
         if(this.props.match.params.id) {
             axios.get(`/api/shelfieproduct/${this.props.match.params.id}`)
+            .then(res => {
+                this.setState({
+                    imageURL: res.data.imageURL,
+                    productName: res.data.productName,
+                    price: res.data.price,
+                    editing: true
+                })
+            })
         }
     }
 
@@ -40,6 +50,15 @@ class Form extends Component {
 
     addShelfieProduct(imageURL, productname, price) {
         axios.post("/api/shelfieProduct", {imageURL, productname, price})
+        .then(() => {
+            this.setState({
+                redirect: true
+            })
+        })
+    }
+
+    editShelfieProduct(imageURL, productname, price) {
+        axios.put(`/api/shelfieProduct/${this.props.match.params.id}`, {imageURL, productname, price})
         .then(() => {
             this.setState({
                 redirect: true
@@ -93,8 +112,15 @@ class Form extends Component {
                 <div>
                     <button
                     onClick={() => this.cancelInput()}>Cancel</button>
-                    <button
-                    onClick={() => this.addShelfieProduct(this.state.imageURL, this.state.productName, this.state.price)}>Add to inventory</button>
+                    {
+                        this.state.editing
+                        ?
+                            <button
+                            onClick={() => this.editShelfieProduct(this.state.imageURL, this.state.productname, this.state.price)}>Save Changes</button>
+                        :
+                        <button
+                        onClick={() => this.addShelfieProduct(this.state.imageURL, this.state.productname, this.state.price)}>Add to inventory</button>
+                    }
                 </div>
             </div>
         )

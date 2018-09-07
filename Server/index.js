@@ -9,9 +9,10 @@ app.use(bodyParser.json())
 port = process.env.PORT || 3005
 
 app.post("/api/shelfieproduct", spc.create)
-app.get("/api/shelfieproducts", spc.read)
+app.get("/api/shelfieproducts", spc.readAll)
 app.put("/api/shelfieproduct/:id", spc.update)
 app.delete("/api/shelfieproduct/:id", spc.delete)
+app.get("/api/shelfieproduct/:id", )
 
 massive(process.env.CONNECTION_STRING).then(db => {
     app.set("db", db)

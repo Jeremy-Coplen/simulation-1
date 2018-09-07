@@ -11,7 +11,7 @@ module.exports = {
         })
     },
 
-    read: (req, res, next) => {
+    readAll: (req, res, next) => {
         const db = req.app.get("db")
 
         db.getAllShelfieProducts()
@@ -43,5 +43,17 @@ module.exports = {
             res.status(500).send({errorMessage: "Yikes something went wrong"})
             console.log(err)
         })
+    },
+
+    readOne: (req, res, next) => {
+        const db = req.app.get("db")
+        
+        db.getOneShelfieProduct({id: req.params.id})
+        .then(shelfieProduct => res.status(200).send(shelfieProduct))
+        .catch(err => {
+            res.status(500).send({errorMessage: "Yikes something went wrong"})
+            console.log(err)
+        })
+
     }
 }
